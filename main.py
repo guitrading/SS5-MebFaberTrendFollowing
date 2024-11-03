@@ -1,14 +1,9 @@
 from AlgorithmImports import *
 
 
-# https://quantpedia.com/strategies/asset-class-trend-following/
-#
 # Use 5 ETFs (SPY - US stocks, EFA - foreign stocks, IEF - bonds, VNQ - REITs,
 # GSG - commodities), equal weight the portfolio. Hold asset class ETF only when
 # it is over its 10 month Simple Moving Average, otherwise stay in cash.
-#
-# QC implementation:
-#   - SMA with period of  days is used.
 
 class AssetClassTrendFollowing(QCAlgorithm):
 
@@ -20,8 +15,7 @@ class AssetClassTrendFollowing(QCAlgorithm):
         period = 5 * 21
         self.SetWarmUp(period)
 
-        self.symbols = ["ABEV3.SA", "BBAS3.SA", "BBDC4.SA", "BOVA11.SA", "CSNA3.SA", "GGBR4.SA",
-                        "ITUB4.SA", "JBSS3.SA", "LREN3.SA", "PETR4.SA", "VALE3.SA"]
+        self.symbols = ["SPY", "EFA", "IEF", "VNQ", "GSC"]
         self.rebalance_flag = False
 
         self.tracked_symbol = None
@@ -29,9 +23,9 @@ class AssetClassTrendFollowing(QCAlgorithm):
             self.AddEquity(symbol, Resolution.Daily)
             self.data[symbol] = self.SMA(symbol, period, Resolution.Daily)
 
-        self.data["BOVA11.SA"].Updated += self.OnSmaUpdated
+        self.data["SPY"].Updated += self.OnSmaUpdated
         self.recent_month = -1
-        self.SetBenchmark("BOVA11.SA")
+        self.SetBenchmark("SPY")
 
    # def OnSmaUpdated(self, sender, updated):
    #     # set rebalance flag
